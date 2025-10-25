@@ -64,7 +64,7 @@ public partial class InventoryDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         //*********************************************************************
-        //TODO: Add Filters here (soft delete, multi-tenant, Active, etc.)
+        //Add Filters here (soft delete, multi-tenant, Active, etc.)
         modelBuilder.Entity<Category>()
                         .HasQueryFilter("SoftDelete", c => !c.IsDeleted)
                         .HasQueryFilter("Active", c => c.IsActive);

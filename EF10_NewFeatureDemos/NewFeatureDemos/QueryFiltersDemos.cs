@@ -81,7 +81,8 @@ public class QueryFiltersDemos : IAsyncDemo
         Console.WriteLine("Contributors with all query filters disabled");
 
         //ensure there is at least one category that is NOT ACTIVE and one that is both deleted and inactive
-        var stamps = await _db.Categories.IgnoreQueryFilters().FirstOrDefaultAsync(c => c.CategoryName == "Stamps");
+        var stamps = await _db.Categories.IgnoreQueryFilters()
+                            .FirstOrDefaultAsync(c => c.CategoryName == "Stamps");
         if (stamps == null)
         {
             var cat = new Category()
@@ -99,7 +100,8 @@ public class QueryFiltersDemos : IAsyncDemo
             await _db.SaveChangesAsync();
         }
 
-        var coins = await _db.Categories.IgnoreQueryFilters().FirstOrDefaultAsync(c => c.CategoryName == "Coins");
+        var coins = await _db.Categories.IgnoreQueryFilters()
+                            .FirstOrDefaultAsync(c => c.CategoryName == "Coins");
         if (coins == null)
         {
             var cat = new Category()
@@ -153,8 +155,8 @@ public class QueryFiltersDemos : IAsyncDemo
                                                                 , "Active and SoftDelete Ignored [All Items Shown]"));
         // get all records, ignoring both filters
         List<Category> allIncludingDeletedAndActive = await _db.Categories
-                                                        .IgnoreQueryFilters(new[] { "SoftDelete", "Active" })
-                                                        .ToListAsync();
+                            .IgnoreQueryFilters(new[] { "SoftDelete", "Active" })
+                            .ToListAsync();
         
 
         Console.WriteLine(ConsolePrinter.PrintBoxedList(allIncludingDeletedAndActive
@@ -166,24 +168,25 @@ public class QueryFiltersDemos : IAsyncDemo
         Console.WriteLine(ConsolePrinter.PrintFormattedMessage("Categories with soft delete filter disabled [any soft-delete state, but only active items]"
                                                                 , "Soft-delete filter off, active on [no inactive items shown]"));
         List<Category> categoriesAndDeleted = await _db.Categories
-                                                        .IgnoreQueryFilters(new[] { "SoftDelete" })
-                                                        .ToListAsync();
+                                .IgnoreQueryFilters(new[] { "SoftDelete" })
+                                .ToListAsync();
         Console.WriteLine(ConsolePrinter.PrintBoxedList(categoriesAndDeleted
             , c => $"{c.Id}: {c.CategoryName} [IS Deleted: {c.IsDeleted}] - [Is Active {c.IsActive}]"));
+
+        Console.WriteLine(ConsolePrinter.PrintFormattedMessage("Why don't we see `Stamps` and `Coins` here?", "Is Active filter still enabled!"));
         UserInput.WaitForUserInput();
 
         //show inactive (will still ignore soft deleted)
         Console.WriteLine(ConsolePrinter.PrintFormattedMessage("Categories with active filter disabled [any active state, but only non-soft-deleted]"
                                                 , "Active filter off, soft-delete on [no soft-deleted items shown, any active state]"));
         List<Category> categoriesAndActive = await _db.Categories
-                                                        .IgnoreQueryFilters(new[] { "Active" })
-                                                        .ToListAsync();
+                                .IgnoreQueryFilters(new[] { "Active" })
+                                .ToListAsync();
 
         Console.WriteLine(ConsolePrinter.PrintBoxedList(categoriesAndActive
             , c => $"{c.Id}: {c.CategoryName} [IS Deleted: {c.IsDeleted}] - [Is Active {c.IsActive}]"));
 
-
-
+        Console.WriteLine(ConsolePrinter.PrintFormattedMessage("Why don't we see `Test Category...` here?", "Soft Delete Filter Still Enabled!"));
         Console.WriteLine("Categories with Named Query Filters Completed");
 
         UserInput.WaitForUserInput();

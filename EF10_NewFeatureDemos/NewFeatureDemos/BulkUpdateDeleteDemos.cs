@@ -97,17 +97,17 @@ public class BulkUpdateDeleteDemos : IAsyncDemo
         var items = await _db.Items.ToListAsync();
         foreach (var item in items)
         {
+            Console.WriteLine($"Updating Item {item.ItemName} to set IsOnSale = true");
             item.IsOnSale = true;
         }
         await _db.SaveChangesAsync();
 
-        Console.WriteLine("It works, but require an O(n) loop and time to do all the items, as well as a transaction to do it and if any fail, they all fail");
-        
         var onSaleItems = await _db.Items.Where(i => i.IsOnSale).ToListAsync();
-        Console.WriteLine($"Number of items on sale: {onSaleItems.Count}");
         Console.WriteLine(ConsolePrinter.PrintBoxedList(onSaleItems, i => $"{i.Id}: {i.ItemName} - On Sale: {i.IsOnSale}"));
 
         Console.WriteLine("Bulk Update All Items On Sale (Original Logic) Completed");
+        Console.WriteLine("It works, but require an O(n) loop and time to do all the items, as well as a transaction to do it and if any fail, they all fail");
+        Console.WriteLine($"Number of items on sale: {onSaleItems.Count}");
 
         UserInput.WaitForUserInput();
     }
@@ -122,13 +122,14 @@ public class BulkUpdateDeleteDemos : IAsyncDemo
                         s.SetProperty(i => i.IsOnSale, i => false)
                     );
 
-        Console.WriteLine($"Number of items updated: {countItems}");
         var onSaleItems = await _db.Items.Where(i => i.IsOnSale).ToListAsync();
-        Console.WriteLine($"Number of items on sale: {onSaleItems.Count}");
         var items = await _db.Items.ToListAsync();
         Console.WriteLine(ConsolePrinter.PrintBoxedList(items, i => $"{i.Id}: {i.ItemName} - On Sale: {i.IsOnSale}"));
 
         Console.WriteLine("Bulk Update Items - Nothing is on sale - Completed");
+        Console.WriteLine($"Number of items updated: {countItems}");
+        Console.WriteLine($"Number of items on sale: {onSaleItems.Count}");
+
         UserInput.WaitForUserInput();
     }
 
@@ -143,12 +144,12 @@ public class BulkUpdateDeleteDemos : IAsyncDemo
                         s.SetProperty(i => i.IsOnSale, i => true)
                     );
 
-        Console.WriteLine($"Number of items updated: {countMovies}");
         var onSaleItems = await _db.Items.Where(i => i.IsOnSale).ToListAsync();
-        Console.WriteLine($"Number of items on sale: {onSaleItems.Count}");
         Console.WriteLine(ConsolePrinter.PrintBoxedList(onSaleItems, i => $"{i.Id}: {i.ItemName} - On Sale: {i.IsOnSale}"));
 
         Console.WriteLine("Bulk Update With Filter - Movies On Sale - Completed");
+        Console.WriteLine($"Number of items updated: {countMovies}");
+        Console.WriteLine($"Number of items on sale: {onSaleItems.Count}");
 
         UserInput.WaitForUserInput();
     }
@@ -171,7 +172,6 @@ public class BulkUpdateDeleteDemos : IAsyncDemo
         }
 
         var allJunk = await _db.JunkToBulkDeletes.ToListAsync();
-        Console.WriteLine($"Number of junk items before delete: {allJunk.Count}");
         Console.WriteLine(ConsolePrinter.PrintBoxedList(allJunk, j => $"{j.Id}: {j.Name}"));
 
         int countJTD = await _db.JunkToBulkDeletes
@@ -179,11 +179,12 @@ public class BulkUpdateDeleteDemos : IAsyncDemo
                                 .ExecuteDeleteAsync();
 
         var current = await _db.JunkToBulkDeletes.ToListAsync();
-        Console.WriteLine($"Number of junk items deleted: {countJTD}");
-        Console.WriteLine($"Number of junk items remaining: {current.Count}");
         Console.WriteLine(ConsolePrinter.PrintBoxedList(current, j => $"{j.Id}: {j.Name}"));
 
         Console.WriteLine("Bulk Delete Junk Data With Filter - Completed");
+        Console.WriteLine($"Number of junk items before delete: {allJunk.Count}");
+        Console.WriteLine($"Number of junk items deleted: {countJTD}");
+        Console.WriteLine($"Number of junk items remaining: {current.Count}");
 
         UserInput.WaitForUserInput();
     }
