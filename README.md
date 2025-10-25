@@ -1,6 +1,6 @@
 # Real World EF
 
-This is the code and link to slides for my talk at SQL Saturday 2025 at St. Paul College in Minnesota  
+This is the code and link to slides for my talk at SQL Saturday 2025 at St. Louis 
 
 ## Slides
 
